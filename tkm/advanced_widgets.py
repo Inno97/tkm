@@ -16,7 +16,8 @@ from tkinter import *
 from tkinter import filedialog
 from tkinter.ttk import *
 
-from .base_widgets import Frame_Widget, Button_Widget, Dropdown_Widget
+from .base_widgets import Frame_Widget, Button_Widget, Dropdown_Widget, \
+    Textbox_Widget, Label_Text_Widget
 import logging
 
 class Button_File_Opener_Widget(Button_Widget):

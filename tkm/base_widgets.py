@@ -6,6 +6,8 @@
 # Advanced widgets should be based off a combination of these Widgets.
 import tkinter as tk
 from tkinter import *
+from tkinter import ttk, scrolledtext
+from tkinter.ttk import *
 
 class Widget:
     """The basic widget object to be inherited by other classes.
@@ -554,8 +556,7 @@ class Dropdown_Widget(Widget):
         Pass in the function (do not include parentheses in the arg).
         """
         if function is not None and self.get_widget() is not None:
-            self.get_widget().bind("<<ComboboxSelected>>", function)
-            set_function(function)
+            self.set_function(function)
         elif function is None:
             raise TypeError('None passed in as args')
         else:
