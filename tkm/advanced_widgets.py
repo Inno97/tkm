@@ -51,7 +51,6 @@ class Button_File_Opener_Widget(Button_Widget):
             raise TypeError(str(self.get_id()) + ' has no target Widget binded\
                  and will not write to any Widget.')
                     
-        log.debug('Opening file')
         files = filedialog.askopenfilenames()
         self.__target_widget.flush()
         for file in files:
@@ -115,7 +114,6 @@ class Dropdown_With_Button_Widget(Frame_Widget):
             width=self.get_width(), bg=self.get_bg(), \
                 borderwidth=self.get_borderwidth()))
         self.set_init()
-        log.debug('Button widget init success')
 
     def setup(self, parent):
         """Inits the widget to a parent widget.
@@ -212,7 +210,6 @@ class Textbox_Dictionary_Widget(Frame_Widget):
             width=self.get_width(), bg=self.get_bg(), \
                 borderwidth=self.get_borderwidth()))
         self.set_init()
-        log.debug('Button widget init success')
 
     def setup(self, parent):
         """Inits the widget to a parent widget.
@@ -271,10 +268,7 @@ class Textbox_Dictionary_Widget(Frame_Widget):
         for key in self.__dict.keys():
             self._widget_textbox.write(str(key) + ':\n')
             for value in self.__dict[key]:
-                try:
-                    self._widget_textbox.write(str(value) + '\n')
-                except KeyError:
-                    log.warn('Invalid option selected')
+                self._widget_textbox.write(str(value) + '\n')
 
     def set_textbox_width(self, value):
         self._widget_textbox.set_width(value)
@@ -347,15 +341,12 @@ class Dropdown_Multiselect_Widget(Frame_Widget):
         self.__button_width = 11 # the length of the button (Width of "Add/Remove")
         self.__textbox_width = textbox_width
 
-        log.debug('Dropdown Multiselect Widget init success')
-
     def __init_widget(self, parent):
         self.set_widget(tk.Frame(parent, height=self.get_height(), \
             width=self.get_width(), bg=self.get_bg(), \
                 borderwidth=self.get_borderwidth()))
         self.init_grid()
         self.set_init()
-        log.debug('Frame widget init success')
 
     def __init_dropdown_widgets(self):
         """Inits the multiple Dropdown_Multiselect_Widgets.
@@ -375,15 +366,12 @@ class Dropdown_Multiselect_Widget(Frame_Widget):
             self.__dropdown_dict[filter] = dropdown_widget
             self.add_widget(self.__dropdown_dict[filter])
             index += 1
-            log.debug('label width')
             self.__dropdown_dict[filter].resize(self.__max_len_filter, \
                 self.__textbox_width - self.__button_width - self.__max_len_filter)
-        log.debug('Added ' + str(index) + ' widgets')
 
     def setup(self, parent):
         """Inits the widget to a parent widget.
         """
-        log.debug('setup')
         self.__init_widget(parent)
         self.__init_dropdown_widgets()
         self.add_widget(self.__filter_textbox)
@@ -416,10 +404,7 @@ class Dropdown_Multiselect_Widget(Frame_Widget):
             values (List): The List of strings of values to set for the
             Dropdown_With_Button_Widget.
         """
-        try:
-            self.__dropdown_dict[filter_name].set_values(values)
-        except KeyError:
-            log.warn(str(filter_name) + ' is not a valid filter in this Widget.')
+        self.__dropdown_dict[filter_name].set_values(values)
 
     def set_textbox_height(self, value):
         """Sets the height of the textbox.
@@ -517,11 +502,14 @@ class Logger_Widget(Frame_Widget):
 
         self.logging_handler.init_widget(self.__widget_textbox.get_widget())
 
-    def start_logger(self):
+    def start_logger(self, log):
         """Adds the logging handler to the logger.
 
         Call this at the end so that it doesn't waste time printing
         debug statements that the user shouldn't see.
+
+        Args:
+            log (Logger): The logger object taken from log.py
         """
         log.addHandler(self.logging_handler)
 

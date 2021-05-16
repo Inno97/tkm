@@ -4,19 +4,8 @@
 
 # Contains the basic Widgets to be used.
 # Advanced widgets should be based off a combination of these Widgets.
-
-# Classes must contain the following methods:
-
-# __init_widget(self, parent) - creates any widgets, calls init_grid() and
-#   set_init(), and set the Frame_Widget
-
-# setup(self, parent) - calls __init_widget, and sets any Widgets to the Frame_Widget
-
 import tkinter as tk
 from tkinter import *
-from tkinter import ttk
-from tkinter import scrolledtext
-from tkinter.ttk import *
 
 class Widget:
     """The basic widget object to be inherited by other classes.
@@ -41,7 +30,7 @@ class Widget:
         self.__is_init = False
 
     def __init_widget(self):
-        log.debug('Method not overriden by parent, unable to init')
+        raise NotImplementedError('Widget has no __init_widget() method overridden')
 
     def init_grid(self):
         """Uses the Grid geometry manager to organize Widget.
@@ -91,7 +80,7 @@ class Widget:
             self._widget.grid(column=self.__column, \
                 columnspan=self.__columnspan)
         else:
-            log.debug('Init widget first')
+            raise UnboundLocalError('Widget not initialized')
 
     def set_column_end(self, value):
         self.__columnspan = value - self.__column
@@ -99,7 +88,7 @@ class Widget:
             self._widget.grid(column=self.__column, \
                 columnspan=self.__columnspan)
         else:
-            log.debug('Init widget first')
+            raise UnboundLocalError('Widget not initialized')
 
     def set_row_start(self, value):
         self.__row = value
@@ -107,7 +96,7 @@ class Widget:
             self._widget.grid(row=self.__row, \
                 rowspan=self.__rowspan)
         else:
-            log.debug('Init widget first')
+            raise UnboundLocalError('Widget not initialized')
 
     def set_row_end(self, value):
         self.__rowspan = value - self.__row
@@ -115,42 +104,42 @@ class Widget:
             self._widget.grid(row=self.__row, \
                 rowspan=self.__rowspan)
         else:
-            log.debug('Init widget first')
+            raise UnboundLocalError('Widget not initialized')
 
     def set_padx(self, value):
         self.__padx = value
         if self.__is_init:
             self._widget.grid(padx=value)
         else:
-            log.debug('Init widget first')
+            raise UnboundLocalError('Widget not initialized')
 
     def set_pady(self, value):
         self.__pady = value
         if self.__is_init:
             self._widget.grid(pady=value)
         else:
-            log.debug('Init widget first')
+            raise UnboundLocalError('Widget not initialized')
 
     def set_ipadx(self, value):
         self.__ipadx = value
         if self.__is_init:
             self._widget.grid(ipadx=value)
         else:
-            log.debug('Init widget first')
+            raise UnboundLocalError('Widget not initialized')
 
     def set_ipady(self, value):
         self.__ipady = value
         if self.__is_init:
             self._widget.grid(ipady=value)
         else:
-            log.debug('Init widget first')
+            raise UnboundLocalError('Widget not initialized')
 
     def set_sticky(self, value):
         self.__sticky = value
         if self.__is_init:
             self._widget.grid(sticky=value)
         else:
-            log.debug('Init widget first')
+            raise UnboundLocalError('Widget not initialized')
 
     def set_init(self):
         self.__is_init = True
@@ -247,7 +236,6 @@ class Frame_Widget(Widget):
             self.get_widget().config(highlightbackground=self.__border_color)
             self.get_widget().config(highlightthickness=self.__borderwidth)
         self.set_init()
-        log.debug('Frame widget init success')
 
     def setup(self, parent):
         """Inits the widget to a parent widget.
@@ -408,7 +396,6 @@ class Label_Text_Widget(Widget):
                 width=self.__width, height=self.__height, anchor='center')
 
         self.set_init()
-        log.debug('Label Text widget init success')
 
     def setup(self, parent):
         """Inits the widget to a parent widget.
@@ -477,7 +464,6 @@ class Textbox_Widget(Widget):
         self.set_widget(scrolledtext.ScrolledText(parent, \
             height=self.__height, width=self.__width, state='disabled'))
         self.set_init()
-        log.debug('Text Box widget init success')
     
     def setup(self, parent):
         """Inits the widget to a parent widget.
@@ -488,8 +474,6 @@ class Textbox_Widget(Widget):
     def write(self, text):
         """Writes the given text to the Textbox, and scrolls down to the end.
         """
-        log.debug('writing:')
-        log.debug(text)
         self.get_widget().configure(state='normal')
         self.get_widget().insert(tk.END, text)
         self.get_widget().see('end')
@@ -552,13 +536,11 @@ class Dropdown_Widget(Widget):
         self.set_widget(Combobox(parent, width=self.__width))
         self.set_values(self.__values)
         self.set_init()
-        log.debug('Dropdown widget init success')
 
     def __init_grid(self):
         self._widget.grid(column=self.__column, row=self.__row, \
             sticky=NSEW, padx=self.__padx, pady=self.__pady, \
                 ipadx=self.__ipadx, ipady=self.__ipady)
-        log.debug('Dropdown widget init grid success')
 
     def setup(self, parent):
         """Inits the widget to a parent widget.
@@ -575,9 +557,9 @@ class Dropdown_Widget(Widget):
             self.get_widget().bind("<<ComboboxSelected>>", function)
             set_function(function)
         elif function is None:
-            log.critical('Unable to bind due to None function being passed')
+            raise TypeError('None passed in as args')
         else:
-            log.critical('Widget is not initialized yet')
+            raise AttributeError('Widget not initialized')
 
     def flush(self):
         self.get_widget().set('')
@@ -591,9 +573,6 @@ class Dropdown_Widget(Widget):
         """
         self.__values = values
         self.get_widget()['values'] = values
-
-        log.debug('Setting values to Dropdown_Widget')
-        log.debug(self.__values)
 
     def set_current_value(self, index):
         """Sets the current value based on the index of the option.
@@ -684,7 +663,6 @@ class Button_Widget(Widget):
         self.set_widget(ttk.Button(parent, text=self.__text, \
             style=self.__style, command=self.__function))
         self.update_style()
-        log.debug('Button widget init success')
 
     def setup(self, parent):
         """Inits the widget to a parent widget.
@@ -710,10 +688,8 @@ class Button_Widget(Widget):
         """Toggles the state between enabled and disabled.
         """
         if self.__is_enabled:
-            log.debug('Disabled button: ' + self.__id)
             self.get_widget().configure(state='disabled')
         else:
-            log.debug('Enabled button: ' + self.__id)
             self.get_widget().configure(state='enabled`')
         self.__is_enabled = not self.__is_enabled
 

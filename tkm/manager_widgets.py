@@ -73,7 +73,6 @@ class Tab_Sidebar_Widget(Frame_Widget):
 
         self.init_grid()
         self.set_init()
-        log.debug('Tab Sidebar Widget init success')
 
     def __add_button_to_sidebar(self):
         """Adds a button to this Widget.
