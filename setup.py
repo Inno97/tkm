@@ -6,7 +6,6 @@ setup(
     author='Daniel Tan',
     author_email='dant9727@gmail.com',
     packages=['tkm'],
-    install_requires=['tkinter'],
     version='0.1',
     license='MIT',
     description='A framework that utilizes Tkinter and provides a simplified way to \
