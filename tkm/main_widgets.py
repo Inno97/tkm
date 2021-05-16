@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import *
 
 class GUI:
     """The GUI class for an app.
